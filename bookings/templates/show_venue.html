@@ -1,0 +1,50 @@
+{% extends 'events/base.html' %}
+
+{% block content %}
+
+
+    <div class="card">
+        <div class="card-header">
+            Photo Package
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">{{ package }}</h5>
+            <p class="card-text">
+            <ul>
+
+                <li>{{ package.name }}</li>
+                <li>{{ package.description }}</li>
+                <li>${{ package.price|floatformat:2 }}</li>
+                <li>Duration: {{ package.duration }}</li>
+                <li>Owner: {{ package_owner }} </li>
+
+            </ul>
+            <br>
+
+            </p>
+            <br/>
+            <h3>Available Bookings for this Package:</h3>
+            {% if bookings %}
+                {% for booking in bookings %}
+                    <a href="{% url 'show-booking' booking.booking_id %}">{{ booking }}</a><br/>
+                {% endfor %}
+                <br/>
+            {% else %}
+                <p>No Bookings Scheduled At This Time.</p>
+            {% endif %}
+
+            {% if user.is_authenticated %}
+                <div class="card-footer text-muted">
+
+                    <a href="{% url 'add-booking' %}" class="btn btn-outline-primary btn-sm">Add
+                        Booking</a>
+                </div>
+            {% endif %}
+        </div>
+        <br/><br/>
+    </div>
+    <br/>
+
+
+    </center>
+{% endblock %}

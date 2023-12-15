@@ -1,0 +1,204 @@
+{% include 'header.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout</title>
+    <script>
+        window.onload = function () {
+            // Function to copy shipping information to billing information
+            function copyShippingToBilling() {
+                document.getElementById('billing_address').value = document.getElementById('shipping_address').value;
+                document.getElementById('billing_address2').value = document.getElementById('shipping_address2').value;
+                document.getElementById('billing_city').value = document.getElementById('shipping_city').value;
+                document.getElementById('billing_state').value = document.getElementById('shipping_state').value;
+                document.getElementById('billing_zip').value = document.getElementById('shipping_zip').value;
+                document.getElementById('billing_country').value = document.getElementById('shipping_country').value;
+                document.getElementById('billing_phone_number').value = document.getElementById('shipping_phone_number').value;
+            }
+
+            // Event listener for the checkbox
+            document.getElementById('same_as_billing').addEventListener('change', function () {
+                var billingDetails = document.querySelector('.billing-details');
+                if (this.checked) {
+                    billingDetails.style.display = 'none';
+                    copyShippingToBilling();
+                } else {
+                    billingDetails.style.display = 'block';
+                }
+            });
+        }
+    </script>
+
+    <style>
+
+        /* Simple styling for the container */
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: -56px;
+        }
+
+        /* Style section headings */
+        h2 {
+            padding: 10px 0;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+            border-bottom: 1px solid #ccc;
+        }
+
+        /* Style the form elements */
+        form {
+            display: block;
+            margin-top: 20px;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        /* Style the checkbox */
+        input[type="checkbox"] {
+            margin-right: 5px;
+        }
+
+        /* Add some space between sections */
+        .shipping-address,
+        .billing-details,
+        .order-summary {
+            margin-bottom: 30px;
+        }
+
+        /* Custom styling for the order summary */
+        .order-summary {
+            padding: 15px;
+            border-radius: 4px;
+            font-size: 17px;
+            line-height: 32px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                width: auto;
+            }
+
+            h2 {
+                font-size: 18px;
+            }
+
+            button[type="submit"] {
+                width: 100%;
+                padding: 15px 0;
+            }
+        }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <form action="{% url 'confirmation' %}" method="post">
+        {% for booking_id in request.session.cart %}
+            <input type="hidden" name="booking_ids" value="{{ booking_id }}">
+        {% endfor %}
+        {% csrf_token %}
+        <div class="shipping-address">
+            <h2>Shipping Details</h2>
+            <label for="full_name">Full name:</label>
+            <input type="text" id="full_name" name="full_name" required><br>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required><br>
+
+            <label for="shipping_address">Address:</label>
+            <input type="text" id="shipping_address" name="shipping_address" required><br>
+
+            <label for="shipping_address2">Address 2:</label>
+            <input type="text" id="shipping_address2" name="shipping_address2"><br>
+
+            <label for="shipping_city">City:</label>
+            <input type="text" id="shipping_city" name="shipping_city" required><br>
+
+            <label for="shipping_state">State:</label>
+            <select id="shipping_state" name="shipping_state" required>
+                {% for code, name in STATE_CHOICES %}
+                    <option value="{{ code }}">{{ name }}</option>
+                {% endfor %}
+            </select><br>
+
+            <label for="shipping_zip">Zip code:</label>
+            <input type="text" id="shipping_zip" name="shipping_zip" required><br>
+
+            <label for="shipping_country">Country:</label>
+            <input type="text" id="shipping_country" name="shipping_country" required><br>
+
+            <label for="phone_number">Phone number:</label>
+            <input type="text" id="phone_number" name="phone_number" required><br>
+
+            <input type="checkbox" id="same_as_billing" name="same_as_billing">
+            <label for="same_as_billing">Shipping address same as billing</label>
+        </div>
+
+        <div class="billing-details">
+            <h2>Billing Details</h2>
+            <label for="billing_address">Address:</label>
+            <input type="text" id="billing_address" name="billing_address" required><br>
+
+            <label for="billing_address2">Address 2:</label>
+            <input type="text" id="billing_address2" name="billing_address2"><br>
+
+            <label for="billing_city">City:</label>
+            <input type="text" id="billing_city" name="billing_city" required><br>
+
+            <label for="billing_state">State:</label>
+            <select id="billing_state" name="billing_state" required>
+                {% for state_code, state_name in STATE_CHOICES %}
+                    <option value="{{ state_code }}">{{ state_name }}</option>
+                {% endfor %}
+            </select><br>
+
+            <label for="billing_zip">Zip code:</label>
+            <input type="text" id="billing_zip" name="billing_zip" required><br>
+
+            <label for="billing_country">Country:</label>
+            <input type="text" id="billing_country" name="billing_country" required><br>
+
+        </div>
+
+        <div class="payment-details">
+            <h2>Payment Details</h2>
+            <label for="card_number">Card Number:</label>
+            <input type="text" id="cc_number" name="cc_number" required><br>
+
+            <label for="exp_date">Exp. Date:</label>
+            <input type="text" id="exp_date" name="exp_date"><br>
+
+            <label for="cvv_number">CVV:</label>
+            <input type="text" id="cvv_number" name="cvv_number"><br>
+
+        </div>
+
+        <div class="order-summary">
+            <button type="submit" class="btn button btn-primary">Confirm Order</button>
+        </div>
+    </form>
+</div>
+{% include 'footer.html' %}
+</body>
+</html>

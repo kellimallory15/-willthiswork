@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <!-- Hidden input for Stripe's client_secret -->
+    <input type="hidden" id="client_secret" name="client_secret" value="{{ client_secret }}">
+
+    <!-- Drop-down for states, using STATE_CHOICES -->
+    <label for="billing_state"></label><select id="billing_state" name="billing_state" required>
+    {% for code, name in STATE_CHOICES %}
+        <option value="{{ code }}">{{ name }}</option>
+    {% endfor %}
+</select>
+
+    <!-- Display booking information -->
+    <div class="booking-details">
+        <h3>Booking Details</h3>
+        <p>Package: {{ booking.package.name }}</p>
+        <p>Date: {{ booking.date|date:"F d, Y" }}</p>
+        <!-- Additional booking details here -->
+    </div>
+{% endblock %}

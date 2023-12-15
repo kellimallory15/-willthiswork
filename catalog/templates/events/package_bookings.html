@@ -1,0 +1,11 @@
+{% extends 'events/base.html' %}
+{% block title %}Pixel Perfect Studios | Bookings List{% endblock %}
+{% block content %}
+
+    <h1>List Bookings</h1>
+
+    {% for booking in bookings %}
+        <a href="{% url 'show-booking' booking.booking_id %}">{{ booking }}</a><br/>
+    {% endfor %}
+
+{% endblock %}

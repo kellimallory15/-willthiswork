@@ -1,0 +1,53 @@
+{% extends 'events/base.html' %}
+{% block title %}Pixel Perfect Studios | Available Bookings{% endblock %}
+{% block content %}
+
+    <body>
+    <div>
+        <h1 class="title" style="font-weight: 500;">Available Bookings</h1>
+        <h6>User must have an account to apply to reserve a booking. If you do not have an account, please create one. User understands that they are NOT reserving a date, but are applying to reserve one. Pixel Perfect studios will be in contact on if the booking was confirmed or denied.</h6>
+        <br/>
+
+        {% comment %}{% if event.approved %}{% endcomment %}
+
+        {% for booking in booking_list %}
+            <div class="card">
+
+                <div class="card-header">
+                    {{ booking }}
+                </div>
+
+                <div class="card-body">
+                    <h5 class="card-title">Package: {{ booking.package }}</h5>
+                    <ul class="card-text">
+                        <li>Date: {{ booking.date }}</li>
+                        <li>Days Till Booking: {{ booking.Days_till }}</li>
+                        <li>Description: {{ booking.description }}</li>
+
+                    </ul>
+                </div>
+                {% if user.is_superuser %}
+                    <div class="card-footer text-muted">
+                        <a href="{% url 'view_cart' %}?booking_id={{ booking.booking_id }}"
+                           class="btn btn-outline-primary btn-sm">Add to Cart</a>
+
+                        <a href="{% url 'update-booking' booking.booking_id %}" class="btn btn-outline-primary btn-sm">Update
+                            Booking</a>
+
+                        <a href="{% url 'delete-booking' booking.booking_id %}" class="btn btn-outline-danger btn-sm">Delete
+                            Booking</a>
+
+                    </div>
+                {% else %}
+                    <div class="card-footer text-muted">
+                        <a href="{% url 'view_cart' %}?booking_id={{ booking.booking_id }}"
+                           class="btn btn-outline-primary btn-sm">Add to Cart</a>
+                    </div>
+                {% endif %}
+                {% comment %}{% endif %}{% endcomment %}
+            </div>
+        {% endfor %}
+    </div>
+    </body>
+
+{% endblock %}

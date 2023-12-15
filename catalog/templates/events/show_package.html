@@ -1,0 +1,57 @@
+{% extends 'events/base.html' %}
+
+{% block content %}
+
+
+    <div class="card">
+        <div class="card-header">
+            Photo Package
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">{{ package }}</h5>
+            <p class="card-text">
+            <ul>
+
+                <li>{{ package.name }}</li>
+                <li>{{ package.description }}</li>
+                <li>{{ package.price }}</li>
+                <li>{{ package.duration }}</li>
+                <li>Owner: {{ package.owner }} </li>
+                <li>Owner's Email: {{ package_owner.email }} </li>
+
+            </ul>
+            <br>
+
+            {% comment %}            {% if package.venue_image %}
+                <img src="{{ package.venue_image.url }}" width=500>
+            {% endif %}{% endcomment %}
+
+
+            </p>
+            <br/>
+            <h3>Available Bookings for this Package</h3>
+
+            {% if bookings %}
+                {% for booking in bookings %}
+                    <a href="{% url 'show-booking' booking.id %}">{{ booking }}</a><br/>
+                {% endfor %}
+                <br/>
+            {% else %}
+                No Bookings Scheduled At This Time.
+            {% endif %}
+
+            {% if user.is_authenticated %}
+                <div class="card-footer text-muted">
+
+                    <a href="{% url 'add-booking' %}" class="btn btn-outline-primary btn-sm">Add
+                        Booking</a>
+                </div>
+            {% endif %}
+        </div>
+        <br/><br/>
+    </div>
+    <br/>
+
+
+    </center>
+{% endblock %}

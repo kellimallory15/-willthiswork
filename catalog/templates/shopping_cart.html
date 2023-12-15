@@ -1,0 +1,217 @@
+{% include 'header.html' %}
+{% load static %}
+
+<head>
+    <title>Pixel Perfect Studios | Shopping Cart</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+    <link rel="icon" type="image/png" sizes="192x192" href="{% static 'android-chrome-192x192.png' %}">
+    <link rel="icon" type="image/png" sizes="512x512" href="{% static 'android-chrome-512x512.png' %}">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'favicon-16x16.png' %}">
+    <link rel="manifest" href="{% static 'site.webmanifest' %}">
+    <link rel="stylesheet" type="text/css" href="{% static 'styles.css' %}">
+    <script src="{% static 'script.js' %}" type="text/javascript"></script>
+
+    <style>
+
+        /* Simple styling for the container */
+        .container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 5px;
+            margin-bottom: -56px;
+        }
+
+        /* Style section headings */
+        h2 {
+            padding: 10px 0;
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        /* Style the form elements */
+        form {
+            display: block;
+            margin-top: 20px;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        /* Style the checkbox */
+        input[type="checkbox"] {
+            margin-right: 5px;
+        }
+
+        .order-summary {
+            margin-bottom: 30px;
+        }
+
+        .order-summary {
+            padding: 15px;
+            border-radius: 4px;
+            font-size: 17px;
+            line-height: 32px;
+        }
+
+        .cart-sidebar {
+            background-color: #f5f5f5;
+            border-radius: 20px;
+            border: rgba(17, 18, 21, 0.1) 1px solid;
+            padding: 20px;
+            margin-top: 46px; /* Adjust as needed */
+            width: 110%;
+        }
+
+        .cart-sidebar .line-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        ul {
+            list-style-type: none;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                width: auto;
+            }
+
+            h2 {
+                font-size: 18px;
+            }
+
+            button[type="submit"] {
+                width: 100%;
+                padding: 15px 0;
+            }
+        }
+
+        .table {
+            width: 100%;
+            margin-bottom: 1rem;
+            background-color: transparent;
+        }
+
+        .table th,
+        .table td {
+            padding: 0.75rem;
+            vertical-align: top;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .table thead th {
+            vertical-align: bottom;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .table tbody + tbody {
+            border-top: 2px solid #dee2e6;
+        }
+
+        .btn-danger {
+            color: #fff;
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+    </style>
+
+</head>
+<body>
+
+<div class="section" style="background-color: transparent!important;">
+    <div class="container">
+        <div class="row">
+            <!-- Main Cart Section -->
+            <div class="col-md-8">
+                <h2>Your Cart</h2>
+                <div class="order-summary">
+                    {% if bookings %}
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>Booking No.</th>
+                                <th>Session Name</th>
+                                <th>Price</th>
+                                <th>Duration</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for booking in bookings %}
+                                <tr>
+                                    <td>000{{ booking.booking_id }}</td>
+                                    <td>{{ booking.name }}</td>
+                                    <td>${{ booking.package.price|floatformat:2 }}</td>
+                                    <td>{{ booking.package.duration }}</td>
+                                    <td>
+                                        <a href="{% url 'remove_from_cart' booking.booking_id %}"
+                                           class="btn btn-danger">Remove</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        <!-- Proceed to Checkout Button -->
+                    {% else %}
+                        <p>Your cart is empty.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Sidebar Section -->
+            <div class="col-md-4">
+                <div class="cart-sidebar">
+                    <h3 style="border-bottom: rgba(51,51,51, 0.2) 1px solid; padding: 10px 0 10px 0;">Order Summary</h3>
+                    <div class="sidebar-content">
+                        <div class="line-item" style="margin-top: 32px;">
+                            <strong>Subtotal:</strong>
+                            <span>${{ subtotal|floatformat:2 }}</span>
+                        </div>
+                        <div class="line-item">
+                            <strong>Sales Tax (5.5%):</strong>
+                            <span>${{ tax|floatformat:2 }}</span>
+                        </div>
+                        <div class="line-item" style="margin-top: 32px; font-size: 125%;">
+                            <strong>Total:</strong>
+                            <span>${{ total|floatformat:2 }}</span>
+                        </div>
+                        {% comment %}<div class="line-item" style="margin-top: 32px; font-size: 125%;">
+                            <strong>Confirmation No.:</strong>
+                            <span>{{ confirmation }}</span>
+                        </div>{% endcomment %}
+                        <a href="{% url 'order_information_input' %}" class="btn button btn-primary"
+                           style="padding-top: 10px; margin-top: 86px; float: right;">Proceed to Checkout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% include 'footer.html' %}
+
+</body>
+</html>
